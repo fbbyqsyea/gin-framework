@@ -1,0 +1,47 @@
+# core
+system:
+  mode: debug # debug test release
+  host: "0.0.0.0"
+  port: 8888
+  readTimeOut: 60
+  writeTimeOut: 60
+
+# db
+db:
+  master:
+    engine: mysql
+    host: '192.168.56.101'
+    port: '3306'
+    username: 'operation_master'
+    password: 'OperationMaster!23456'
+    dbname: 'operation'
+    config: 'charset=utf8mb4&parseTime=True&loc=Local'
+  replica:
+    engine: mysql
+    host: '192.168.56.101'
+    port: '3306'
+    username: 'operation_replica'
+    password: 'OperationReplica!23456'
+    dbname: 'operation'
+    config: 'charset=utf8mb4&parseTime=True&loc=Local'
+
+# redis
+redis:
+  db: 0
+  addr: '192.168.56.101:6379'
+  password: ''
+
+# logger
+logger:
+  format: 'console' # console|json
+  director: 'log'
+  showLine: true
+  encodeLevel: 'LowercaseColorLevelEncoder'
+  stackTraceKey: 'stacktrace'
+
+# jwt
+jwt:
+  secretKey: zZwACWUjEf7yNSRt
+  expireTime: 86400
+  issuer: gin-framework
+  subject: gin admin client user token
