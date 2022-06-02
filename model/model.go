@@ -10,12 +10,6 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-func LoggerError(err error) {
-	if err != nil {
-		global.LOGGER.Error(err.Error())
-	}
-}
-
 type SqlParse struct {
 	InsertColumns string                 // insert
 	InsertValues  []interface{}          // insert
@@ -44,7 +38,7 @@ func (s *SqlParse) Parse(i interface{}) {
 		}
 		if k.Kind() == reflect.Struct {
 			for j := 0; j < k.NumField(); j++ {
-				s.Condition(k.Field(j), v.Field(j))
+				s.Condition(k.Field(j), v)
 			}
 		} else {
 			s.Condition(keys.Field(i), v)
@@ -53,7 +47,7 @@ func (s *SqlParse) Parse(i interface{}) {
 }
 
 func (s *SqlParse) Condition(key reflect.StructField, value reflect.Value) {
-	if (value.CanInterface() && !value.IsZero()) || key.Tag.Get("order") != "" {
+	if (!value.IsZero() && value.CanInterface()) || key.Tag.Get("order") != "" {
 		v := value.Interface()
 		// insert
 		tag := key.Tag.Get("insert")
@@ -164,11 +158,10 @@ func (s *SqlExec) Find() error {
 		sb = sb.Where(where)
 	}
 	sql, data, err := sb.ToSql()
-	if err == nil {
-		err = s.Replica.Get(s.Result, sql, data...)
+	if err != nil {
+		return err
 	}
-	LoggerError(err)
-	return err
+	return s.Replica.Get(s.Result, sql, data...)
 }
 
 func (s *SqlExec) FindMaster() error {
@@ -177,11 +170,10 @@ func (s *SqlExec) FindMaster() error {
 		sb = sb.Where(where)
 	}
 	sql, data, err := sb.ToSql()
-	if err == nil {
-		err = s.Master.Get(s.Result, sql, data...)
+	if err != nil {
+		return err
 	}
-	LoggerError(err)
-	return err
+	return s.Master.Get(s.Result, sql, data...)
 }
 
 func (s *SqlExec) Select() error {
@@ -200,11 +192,10 @@ func (s *SqlExec) Select() error {
 		sb = sb.OrderBy(s.Parse.OrderBy)
 	}
 	sql, data, err := sb.ToSql()
-	if err == nil {
-		err = s.Replica.Select(s.Result, sql, data...)
+	if err != nil {
+		return err
 	}
-	LoggerError(err)
-	return err
+	return s.Replica.Select(s.Result, sql, data...)
 }
 
 func (s *SqlExec) SelectMaster() error {
@@ -223,11 +214,10 @@ func (s *SqlExec) SelectMaster() error {
 		sb = sb.OrderBy(s.Parse.OrderBy)
 	}
 	sql, data, err := sb.ToSql()
-	if err == nil {
-		err = s.Master.Select(s.Result, sql, data...)
+	if err != nil {
+		return err
 	}
-	LoggerError(err)
-	return err
+	return s.Master.Select(s.Result, sql, data...)
 }
 
 func (s *SqlExec) Count() error {
@@ -236,11 +226,10 @@ func (s *SqlExec) Count() error {
 		sb = sb.Where(where)
 	}
 	sql, data, err := sb.ToSql()
-	if err == nil {
-		err = s.Replica.Get(s.Result, sql, data...)
+	if err != nil {
+		return err
 	}
-	LoggerError(err)
-	return err
+	return s.Replica.Get(s.Result, sql, data...)
 }
 
 func (s *SqlExec) CountMaster() error {
@@ -249,29 +238,26 @@ func (s *SqlExec) CountMaster() error {
 		sb = sb.Where(where)
 	}
 	sql, data, err := sb.ToSql()
-	if err == nil {
-		err = s.Master.Get(s.Result, sql, data...)
+	if err != nil {
+		return err
 	}
-	LoggerError(err)
-	return err
+	return s.Master.Get(s.Result, sql, data...)
 }
 
-func (s *SqlExec) Insert() error {
+func (s *SqlExec) Insert() (lastInsertId int64, err error) {
 	sql, data, err := sq.Insert(s.TableName).Columns(s.Parse.InsertColumns).Values(s.Parse.InsertValues...).ToSql()
-	if err == nil {
-		result, err := s.Master.Exec(sql, data...)
-		if err == nil {
-			id, err := result.LastInsertId()
-			if err == nil {
-				s.Result = id
-			}
-		}
+	if err != nil {
+		return
 	}
-	LoggerError(err)
-	return err
+	result, err := s.Master.Exec(sql, data...)
+	if err != nil {
+		return
+	}
+	lastInsertId, err = result.LastInsertId()
+	return
 }
 
-func (s *SqlExec) Update() error {
+func (s *SqlExec) Update() (affectedRow int64, err error) {
 	ub := sq.Update(s.TableName)
 	for k, v := range s.Parse.UpdateColumns {
 		ub = ub.Set(k, v)
@@ -280,17 +266,15 @@ func (s *SqlExec) Update() error {
 		ub = ub.Where(where)
 	}
 	sql, data, err := ub.ToSql()
-	if err == nil {
-		result, err := s.Master.Exec(sql, data...)
-		if err == nil {
-			rows, err := result.RowsAffected()
-			if err == nil {
-				s.Result = rows
-			}
-		}
+	if err != nil {
+		return
 	}
-	LoggerError(err)
-	return err
+	result, err := s.Master.Exec(sql, data...)
+	if err != nil {
+		return
+	}
+	affectedRow, err = result.RowsAffected()
+	return
 }
 
 type Model struct {
@@ -316,10 +300,10 @@ func (m *Model) Select(req, resp interface{}) (err error) {
 	return se.Select()
 }
 
-func (m *Model) Insert(req, resp interface{}) (err error) {
-	return NewSqlExec(req, resp, m.TableName).Insert()
+func (m *Model) Insert(req interface{}) (lastInsertId int64, err error) {
+	return NewSqlExec(req, nil, m.TableName).Insert()
 }
 
-func (m *Model) Update(req, resp interface{}) (err error) {
-	return NewSqlExec(req, resp, m.TableName).Update()
+func (m *Model) Update(req interface{}) (affextedRow int64, err error) {
+	return NewSqlExec(req, nil, m.TableName).Update()
 }

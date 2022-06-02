@@ -18,5 +18,5 @@ CREATE TABLE `tb_operation_user` (
 
 -- 写入初始化数据
 INSERT INTO operation.tb_operation_user
-(id, account, username, password, salt, status, is_delete, insert_at, update_at)
-VALUES(1, 'admin', '超级管理员', 'a4ba57c03c548a762c4ab0bb03c0b377', 'sJtKCEpSaZrPjxcF', 1, 2, '2022-05-31 09:19:17', '2022-05-31 09:20:38');
+(id, account, username, password, salt, status, is_delete)
+VALUES(1, 'admin', '超级管理员', 'a4ba57c03c548a762c4ab0bb03c0b377', 'sJtKCEpSaZrPjxcF', 1, 2);

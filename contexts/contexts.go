@@ -74,6 +74,11 @@ type COUNT struct {
 	Count int `json:"count" db:"count"` // 数量
 }
 
+type GetRequest struct {
+	Id       uint `form:"id" where:"id"` // 用户ID
+	IsDelete int  `where:"is_delete" default:"2"`
+}
+
 type StatusRequest struct {
 	Id     uint `json:"id" where:"id"`          // 用户ID
 	Status int  `json:"status" update:"status"` // 状态 1:启用 2:禁用

@@ -34,11 +34,13 @@ func (s *SwaggerRouters) Register(g *gin.Engine) {
 // api接口路由
 type ApiRouters struct {
 	user *UserRouter
+	role *RoleRouter
 }
 
 func NewApiRouters() *ApiRouters {
 	return &ApiRouters{
 		user: NewUserRouter(),
+		role: NewRoleRouter(),
 	}
 }
 
@@ -46,6 +48,7 @@ func (a *ApiRouters) Register(g *gin.Engine) {
 	apig := g.Group("api")
 	{
 		a.user.Register(apig)
+		a.role.Register(apig)
 	}
 }
 

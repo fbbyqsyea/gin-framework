@@ -34,17 +34,12 @@ type UserLoginResponse struct {
 	} `json:"data"` // 数据
 }
 
-type UserGetRequest struct {
-	Id       uint `form:"id" where:"id"` // 用户ID
-	IsDelete int  `where:"is_delete" default:"2"`
-}
-
 type UserListRequest struct {
 	Id       uint   `order:"id desc"`
 	Account  string `form:"account" where:"account,like"` // 账户
 	Status   int    `form:"status" where:"status"`        // 状态
 	IsDelete int    `where:"is_delete" default:"2"`       // 是否删除
-	*PAGEANDLIMIT
+	PAGEANDLIMIT
 }
 
 type UserInsertRequest struct {

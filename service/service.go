@@ -11,8 +11,8 @@ type Model interface {
 	Get(req, resp interface{}) error
 	Count(req, resp interface{}) error
 	Select(req, resp interface{}) error
-	Insert(req, resp interface{}) error
-	Update(req, resp interface{}) error
+	Insert(req interface{}) (int64, error)
+	Update(req interface{}) (int64, error)
 }
 
 type Service struct {
@@ -58,9 +58,8 @@ func (s *Service) List(req, data any) *contexts.RESPONSEWITHCOUNT {
 
 func (s *Service) Insert(req any) *contexts.RESPONSE {
 	var resp contexts.RESPONSE
-	var id int64
 	// 写入数据
-	err := s.Mdl.Insert(req, &id)
+	id, err := s.Mdl.Insert(req)
 	if err != nil {
 		resp.STATE(contexts.ERR_INSERT)
 	} else {
@@ -71,8 +70,7 @@ func (s *Service) Insert(req any) *contexts.RESPONSE {
 
 func (s *Service) Update(req any) *contexts.RESPONSE {
 	var resp contexts.RESPONSE
-	var rows int64
-	err := s.Mdl.Update(req, &rows)
+	rows, err := s.Mdl.Update(req)
 	if err != nil {
 		resp.STATE(contexts.ERR_UPDATE)
 	} else {
@@ -83,8 +81,7 @@ func (s *Service) Update(req any) *contexts.RESPONSE {
 
 func (s *Service) Remove(req any) *contexts.RESPONSE {
 	var resp contexts.RESPONSE
-	var rows int64
-	err := s.Mdl.Update(req, &rows)
+	rows, err := s.Mdl.Update(req)
 	if err != nil {
 		resp.STATE(contexts.ERR_DELETE)
 	} else {

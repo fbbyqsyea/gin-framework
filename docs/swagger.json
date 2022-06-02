@@ -4,6 +4,372 @@
         "contact": {}
     },
     "paths": {
+        "/api/role/get": {
+            "get": {
+                "description": "用于获取角色信息",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "角色相关"
+                ],
+                "summary": "获取角色信息接口",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "角色ID",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "授权令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/contexts.RESPONSE"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/contexts.RoleData"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/role/insert": {
+            "post": {
+                "description": "用于新增角色信息",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "角色相关"
+                ],
+                "summary": "新增角色信息接口",
+                "parameters": [
+                    {
+                        "description": "角色信息",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/contexts.RoleInsertRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "授权令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "新增的角色id",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/contexts.RESPONSE"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/role/list": {
+            "get": {
+                "description": "用于获取角色列表",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "角色相关"
+                ],
+                "summary": "获取角色列表接口",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "角色id",
+                        "name": "id",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "状态 1:启用 2:禁用 默认:1",
+                        "name": "status",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "页数 默认:1",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "页数量 默认:20",
+                        "name": "limit",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "授权令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/contexts.RESPONSE"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/contexts.RoleData"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/role/remove": {
+            "post": {
+                "description": "用于删除角色",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "角色相关"
+                ],
+                "summary": "删除角色接口",
+                "parameters": [
+                    {
+                        "description": "角色信息",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/contexts.RemoveRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "授权令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "删除影响行数",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/contexts.RESPONSE"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/role/removes": {
+            "post": {
+                "description": "用于批量删除角色",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "角色相关"
+                ],
+                "summary": "批量删除角色接口",
+                "parameters": [
+                    {
+                        "description": "角色信息",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/contexts.RemovesRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "授权令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "删除影响行数",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/contexts.RESPONSE"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/role/status": {
+            "post": {
+                "description": "用于更新角色状态信息",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "角色相关"
+                ],
+                "summary": "更新角色状态信息接口",
+                "parameters": [
+                    {
+                        "description": "状态信息",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/contexts.StatusRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "授权令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "更新影响行数",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/contexts.RESPONSE"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/role/update": {
+            "post": {
+                "description": "用于更新角色信息",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "角色相关"
+                ],
+                "summary": "更新角色信息接口",
+                "parameters": [
+                    {
+                        "description": "角色信息",
+                        "name": "object",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/contexts.RoleUpdateRequest"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "授权令牌",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "更新影响行数",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/contexts.RESPONSE"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/api/user/get": {
             "get": {
                 "description": "用于获取用户信息",
@@ -41,7 +407,7 @@
                                 {
                                     "type": "object",
                                     "properties": {
-                                        "Data": {
+                                        "data": {
                                             "$ref": "#/definitions/contexts.UserData"
                                         }
                                     }
@@ -82,9 +448,21 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "用户id",
                         "schema": {
-                            "$ref": "#/definitions/contexts.RESPONSE"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/contexts.RESPONSE"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -144,7 +522,7 @@
                                 {
                                     "type": "object",
                                     "properties": {
-                                        "Data": {
+                                        "data": {
                                             "type": "array",
                                             "items": {
                                                 "$ref": "#/definitions/contexts.UserData"
@@ -222,9 +600,21 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "删除用户数",
                         "schema": {
-                            "$ref": "#/definitions/contexts.RESPONSE"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/contexts.RESPONSE"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -260,9 +650,21 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "批量删除用户数",
                         "schema": {
-                            "$ref": "#/definitions/contexts.RESPONSE"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/contexts.RESPONSE"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -298,9 +700,21 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "状态变更是否成功 1:是 0:否",
                         "schema": {
-                            "$ref": "#/definitions/contexts.RESPONSE"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/contexts.RESPONSE"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -336,9 +750,21 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "OK",
+                        "description": "用户信息更新是否成功",
                         "schema": {
-                            "$ref": "#/definitions/contexts.RESPONSE"
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/contexts.RESPONSE"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -382,6 +808,64 @@
                     "items": {
                         "type": "integer"
                     }
+                }
+            }
+        },
+        "contexts.RoleData": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "description": "id",
+                    "type": "integer"
+                },
+                "insert_at": {
+                    "description": "入库时间",
+                    "type": "string"
+                },
+                "parent_id": {
+                    "description": "父级角色ID",
+                    "type": "integer"
+                },
+                "role_name": {
+                    "description": "角色名称",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "状态 1:启用 2:禁用",
+                    "type": "integer"
+                },
+                "update_at": {
+                    "description": "更新时间",
+                    "type": "string"
+                }
+            }
+        },
+        "contexts.RoleInsertRequest": {
+            "type": "object",
+            "properties": {
+                "parent_id": {
+                    "description": "父级角色ID",
+                    "type": "integer"
+                },
+                "role_name": {
+                    "description": "角色名称",
+                    "type": "string"
+                }
+            }
+        },
+        "contexts.RoleUpdateRequest": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "parent_id": {
+                    "description": "父级角色ID",
+                    "type": "integer"
+                },
+                "role_name": {
+                    "description": "角色名称",
+                    "type": "string"
                 }
             }
         },

@@ -44,10 +44,10 @@ func (u *UserApi) Login(c *gin.Context) {
 // @Produce json
 // @param id query uint true "用户ID"
 // @param Authorization header string true "授权令牌"
-// @Response 200 {object} contexts.RESPONSE{Data=contexts.UserData}
+// @Response 200 {object} contexts.RESPONSE{data=contexts.UserData}
 // @Router /api/user/get [get]
 func (u *UserApi) Get(c *gin.Context) {
-	u.Api.Get(c, &contexts.UserGetRequest{}, &contexts.UserData{})
+	u.Api.Get(c, &contexts.GetRequest{}, &contexts.UserData{})
 }
 
 // 获取用户列表
@@ -61,7 +61,7 @@ func (u *UserApi) Get(c *gin.Context) {
 // @param page query uint64 false "页数 默认:1"
 // @param limit query uint64 false "页数量 默认:20"
 // @param Authorization header string true "授权令牌"
-// @Response 200 {object} contexts.RESPONSE{Data=[]contexts.UserData{}}
+// @Response 200 {object} contexts.RESPONSE{data=[]contexts.UserData{}}
 // @Router /api/user/list [get]
 func (u *UserApi) List(c *gin.Context) {
 	u.Api.List(c, &contexts.UserListRequest{}, &[]contexts.UserData{})
@@ -75,7 +75,7 @@ func (u *UserApi) List(c *gin.Context) {
 // @Produce json
 // @param object body contexts.UserInsertRequest true "用户信息"
 // @param Authorization header string true "授权令牌"
-// @Response 200 {object} contexts.RESPONSE
+// @Response 200 {object} contexts.RESPONSE{data=uint} "用户id"
 // @Router /api/user/insert [post]
 func (u *UserApi) Insert(c *gin.Context) {
 	u.Api.Insert(c, &contexts.UserInsertRequest{})
@@ -89,7 +89,7 @@ func (u *UserApi) Insert(c *gin.Context) {
 // @Produce json
 // @param object body contexts.UserUpdateRequest true "用户信息"
 // @param Authorization header string true "授权令牌"
-// @Response 200 {object} contexts.RESPONSE
+// @Response 200 {object} contexts.RESPONSE{data=uint} "用户信息更新是否成功"
 // @Router /api/user/update [post]
 func (u *UserApi) Update(c *gin.Context) {
 	u.Api.Update(c, &contexts.UserUpdateRequest{})
@@ -103,7 +103,7 @@ func (u *UserApi) Update(c *gin.Context) {
 // @Produce json
 // @param object body contexts.StatusRequest true "用户状态信息"
 // @param Authorization header string true "授权令牌"
-// @Response 200 {object} contexts.RESPONSE
+// @Response 200 {object} contexts.RESPONSE{data=uint} "状态变更是否成功 1:是 0:否"
 // @Router /api/user/status [post]
 func (u *UserApi) Status(c *gin.Context) {
 	var req contexts.StatusRequest
@@ -128,7 +128,7 @@ func (u *UserApi) Status(c *gin.Context) {
 // @Produce json
 // @param object body contexts.RemoveRequest true "用户id信息"
 // @param Authorization header string true "授权令牌"
-// @Response 200 {object} contexts.RESPONSE
+// @Response 200 {object} contexts.RESPONSE{data=uint} "删除用户数"
 // @Router /api/user/remove [post]
 func (u *UserApi) Remove(c *gin.Context) {
 	var req contexts.RemoveRequest
@@ -153,7 +153,7 @@ func (u *UserApi) Remove(c *gin.Context) {
 // @Produce json
 // @param object body contexts.RemovesRequest true "用户ids信息"
 // @param Authorization header string true "授权令牌"
-// @Response 200 {object} contexts.RESPONSE
+// @Response 200 {object} contexts.RESPONSE{data=uint} "批量删除用户数"
 // @Router /api/user/removes [post]
 func (u *UserApi) Removes(c *gin.Context) {
 	var req contexts.RemovesRequest

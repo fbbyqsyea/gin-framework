@@ -10,7 +10,7 @@ system:
 db:
   master:
     engine: mysql
-    host: '192.168.56.101'
+    host: '127.0.0.1'
     port: '3306'
     username: 'operation_master'
     password: 'OperationMaster!23456'
@@ -18,7 +18,7 @@ db:
     config: 'charset=utf8mb4&parseTime=True&loc=Local'
   replica:
     engine: mysql
-    host: '192.168.56.101'
+    host: '127.0.0.1'
     port: '3306'
     username: 'operation_replica'
     password: 'OperationReplica!23456'
@@ -28,7 +28,7 @@ db:
 # redis
 redis:
   db: 0
-  addr: '192.168.56.101:6379'
+  addr: '127.0.0.1:6379'
   password: ''
 
 # logger
