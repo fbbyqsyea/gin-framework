@@ -37,7 +37,7 @@ func (us *UserService) Login(req *contexts.UserLoginRequest) *contexts.UserLogin
 	var resp contexts.UserLoginResponse
 	var userData contexts.UserData
 	// 获取用户信息
-	err := us.Mdl.Get(req, &userData)
+	err := us.Mdl.Get(req, &userData, false)
 	fmt.Println(utils.MD5(req.Password+userData.Salt), "122222222")
 	if errors.Is(err, sql.ErrNoRows) {
 		resp.STATE(contexts.ERR_USER_NOT_EXISTS)
@@ -128,7 +128,7 @@ func (us *UserService) Update(req any) *contexts.RESPONSE {
 		}
 		var u contexts.UserData
 		// 用户信息获取
-		err := us.Mdl.Get(req, &u)
+		err := us.Mdl.Get(req, &u, true)
 		if errors.Is(err, sql.ErrNoRows) {
 			resp.STATE(contexts.ERR_USER_NOT_EXISTS)
 			return &resp

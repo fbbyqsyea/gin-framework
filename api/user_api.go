@@ -47,7 +47,7 @@ func (u *UserApi) Login(c *gin.Context) {
 // @Response 200 {object} contexts.RESPONSE{data=contexts.UserData}
 // @Router /api/user/get [get]
 func (u *UserApi) Get(c *gin.Context) {
-	u.Api.Get(c, &contexts.GetRequest{}, &contexts.UserData{})
+	u.Api.Get(c, &contexts.GetRequest{}, &contexts.UserData{}, false)
 }
 
 // 获取用户列表
@@ -64,7 +64,7 @@ func (u *UserApi) Get(c *gin.Context) {
 // @Response 200 {object} contexts.RESPONSE{data=[]contexts.UserData{}}
 // @Router /api/user/list [get]
 func (u *UserApi) List(c *gin.Context) {
-	u.Api.List(c, &contexts.UserListRequest{}, &[]contexts.UserData{})
+	u.Api.List(c, &contexts.UserListRequest{}, &[]contexts.UserData{}, false)
 }
 
 // 新增用户信息

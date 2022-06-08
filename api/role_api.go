@@ -100,7 +100,7 @@ func (r *RoleApi) Removes(c *gin.Context) {
 // @Response 200 {object} contexts.RESPONSE{data=contexts.RoleData}
 // @Router /api/role/get [get]
 func (r *RoleApi) Get(c *gin.Context) {
-	r.Api.Get(c, &contexts.GetRequest{}, &contexts.RoleData{})
+	r.Api.Get(c, &contexts.GetRequest{}, &contexts.RoleData{}, false)
 }
 
 // 获取角色列表
@@ -117,5 +117,5 @@ func (r *RoleApi) Get(c *gin.Context) {
 // @Response 200 {object} contexts.RESPONSE{data=[]contexts.RoleData{}}
 // @Router /api/role/list [get]
 func (r *RoleApi) List(c *gin.Context) {
-	r.Api.List(c, &contexts.RoleListRequest{}, &[]contexts.RoleData{})
+	r.Api.List(c, &contexts.RoleListRequest{}, &[]contexts.RoleData{}, false)
 }

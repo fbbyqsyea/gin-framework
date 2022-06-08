@@ -9,8 +9,8 @@ import (
 )
 
 type Service interface {
-	Get(req, data interface{}) *contexts.RESPONSE
-	List(req, data interface{}) *contexts.RESPONSEWITHCOUNT
+	Get(req, data interface{}, isMaster bool) *contexts.RESPONSE
+	List(req, data interface{}, isMaster bool) *contexts.RESPONSEWITHCOUNT
 	Insert(req interface{}) *contexts.RESPONSE
 	Update(req interface{}) *contexts.RESPONSE
 	Remove(req interface{}) *contexts.RESPONSE
@@ -51,15 +51,15 @@ func (a *Api) JSON(c *gin.Context, resp interface{}) {
 	c.JSON(http.StatusOK, resp)
 }
 
-func (a *Api) Get(c *gin.Context, req, data interface{}) {
+func (a *Api) Get(c *gin.Context, req, data interface{}, isMaster bool) {
 	if a.ShouldBindQuery(c, req) {
-		a.JSON(c, a.Svc.Get(req, data))
+		a.JSON(c, a.Svc.Get(req, data, isMaster))
 	}
 }
 
-func (a *Api) List(c *gin.Context, req, data interface{}) {
+func (a *Api) List(c *gin.Context, req, data interface{}, isMaster bool) {
 	if a.ShouldBindQuery(c, req) {
-		a.JSON(c, a.Svc.List(req, data))
+		a.JSON(c, a.Svc.List(req, data, isMaster))
 	}
 }
 
@@ -92,18 +92,18 @@ func (a *Api) Removes(c *gin.Context, req interface{}) {
 	}
 }
 
-func (a *Api) GetHandleFunc(req, data interface{}) func(*gin.Context) {
+func (a *Api) GetHandleFunc(req, data interface{}, isMaster bool) func(*gin.Context) {
 	return func(c *gin.Context) {
 		if a.ShouldBindQuery(c, req) {
-			a.JSON(c, a.Svc.Get(req, data))
+			a.JSON(c, a.Svc.Get(req, data, isMaster))
 		}
 	}
 }
 
-func (a *Api) ListHandleFunc(req, data interface{}) func(*gin.Context) {
+func (a *Api) ListHandleFunc(req, data interface{}, isMaster bool) func(*gin.Context) {
 	return func(c *gin.Context) {
 		if a.ShouldBindQuery(c, req) {
-			a.JSON(c, a.Svc.List(req, data))
+			a.JSON(c, a.Svc.List(req, data, isMaster))
 		}
 	}
 }

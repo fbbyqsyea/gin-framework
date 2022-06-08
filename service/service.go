@@ -8,9 +8,9 @@ import (
 )
 
 type Model interface {
-	Get(req, resp interface{}) error
-	Count(req, resp interface{}) error
-	Select(req, resp interface{}) error
+	Get(req, resp interface{}, isMaster bool) error
+	Count(req, resp interface{}, isMaster bool) error
+	Select(req, resp interface{}, isMaster bool) error
 	Insert(req interface{}) (int64, error)
 	Update(req interface{}) (int64, error)
 }
@@ -25,9 +25,9 @@ func NewService(mdl Model) *Service {
 	}
 }
 
-func (s *Service) Get(req, data any) *contexts.RESPONSE {
+func (s *Service) Get(req, data any, isMaster bool) *contexts.RESPONSE {
 	var resp contexts.RESPONSE
-	err := s.Mdl.Get(req, data)
+	err := s.Mdl.Get(req, data, isMaster)
 	if errors.Is(err, sql.ErrNoRows) {
 		resp.STATE(contexts.ERR_USER_NOT_EXISTS)
 	} else if err != nil {
@@ -38,15 +38,15 @@ func (s *Service) Get(req, data any) *contexts.RESPONSE {
 	return &resp
 }
 
-func (s *Service) List(req, data any) *contexts.RESPONSEWITHCOUNT {
+func (s *Service) List(req, data any, isMaster bool) *contexts.RESPONSEWITHCOUNT {
 	var resp contexts.RESPONSEWITHCOUNT
 	var count contexts.COUNT
-	err := s.Mdl.Count(req, &count)
+	err := s.Mdl.Count(req, &count, isMaster)
 	if err != nil {
 		resp.STATE(contexts.ERR_SYSTEM)
 	} else {
 		resp.COUNT(count.Count)
-		err := s.Mdl.Select(req, data)
+		err := s.Mdl.Select(req, data, isMaster)
 		if err != nil {
 			resp.STATE(contexts.ERR_SYSTEM)
 		} else {
