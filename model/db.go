@@ -24,18 +24,18 @@ func (s *SqlParse) Parse(i interface{}) {
 	s.Recursion(keys, values)
 }
 
-func (s *SqlParse) Recursion(k reflect.Type, v reflect.Value) {
-	if k.Kind() == reflect.Ptr {
-		k = k.Elem()
-		v = v.Elem()
+func (s *SqlParse) Recursion(key reflect.Type, val reflect.Value) {
+	if key.Kind() == reflect.Ptr {
+		key = key.Elem()
+		val = val.Elem()
 	}
-	for i := 0; i < k.NumField(); i++ {
-		k := k.Field(i).Type
-		v := v.Field(i)
+	for i := 0; i < key.NumField(); i++ {
+		k := key.Field(i).Type
+		v := val.Field(i)
 		if k.Kind() == reflect.Struct {
 			s.Recursion(k, v)
 		} else {
-			s.Condition(k.Field(i), v)
+			s.Condition(key.Field(i), v)
 		}
 	}
 }
@@ -191,9 +191,9 @@ func (s *SqlExec) Count(isMaster bool) error {
 		return err
 	}
 	if isMaster {
-		return global.DB.Master.Select(s.Result, sql, data...)
+		return global.DB.Master.Get(s.Result, sql, data...)
 	}
-	return global.DB.Replica.Select(s.Result, sql, data...)
+	return global.DB.Replica.Get(s.Result, sql, data...)
 }
 
 func (s *SqlExec) Insert() (lastInsertId int64, err error) {
